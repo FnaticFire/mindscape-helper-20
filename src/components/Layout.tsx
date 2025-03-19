@@ -1,11 +1,22 @@
 
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/AppHeader';
 import Navigation from '@/components/Navigation';
 import { useApp } from '@/contexts/AppContext';
 
 const Layout: React.FC = () => {
+  const { user } = useApp();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect to home if not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <AppHeader />

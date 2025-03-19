@@ -8,13 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MessageSquare, BarChart, Wind, User, Brain, Home, Heart, Moon, Sun, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
-  const { user, setUser, darkMode, setDarkMode } = useApp();
+  const { user, login, register, darkMode, setDarkMode } = useApp();
   const [showLogin, setShowLogin] = useState(false);
   const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [activeFeature, setActiveFeature] = useState(0);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   
   // Redirect to chat if user already exists
   useEffect(() => {
@@ -32,14 +35,18 @@ const Index: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
   
-  const handleLogin = (e: React.FormEvent) => {
+  const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      setUser({
-        name: name.trim(),
-        streakDays: 1,
-      });
-      navigate('/chat');
+    if (name.trim() && password) {
+      if (authTab === 'login') {
+        if (login(name.trim(), password)) {
+          navigate('/chat');
+        }
+      } else {
+        if (register(name.trim(), password)) {
+          navigate('/chat');
+        }
+      }
     }
   };
   
@@ -101,7 +108,7 @@ const Index: React.FC = () => {
               <img 
                 src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
                 alt="MindHaven Logo with Tagline" 
-                className="h-32 md:h-40 w-auto mb-4 animate-fade-in"
+                className="h-32 md:h-40 w-auto mb-4 animate-fade-in dark:invert"
               />
             </div>
             
@@ -120,22 +127,69 @@ const Index: React.FC = () => {
                   Get Started
                 </CardTitle>
                 <CardDescription className="text-center">
-                  Enter your name to begin your wellness journey
+                  Begin your wellness journey
                 </CardDescription>
               </CardHeader>
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleAuth}>
                 <CardContent className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your Name</Label>
-                    <Input 
-                      id="name" 
-                      placeholder="Enter your name" 
-                      value={name} 
-                      onChange={(e) => setName(e.target.value)}
-                      className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
-                      required
-                    />
-                  </div>
+                  <Tabs value={authTab} onValueChange={(value) => setAuthTab(value as 'login' | 'register')} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-4">
+                      <TabsTrigger value="login">Login</TabsTrigger>
+                      <TabsTrigger value="register">Register</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="login" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="login-name">Username</Label>
+                        <Input 
+                          id="login-name" 
+                          placeholder="Enter your username" 
+                          value={name} 
+                          onChange={(e) => setName(e.target.value)}
+                          className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="login-password">Password</Label>
+                        <Input 
+                          id="login-password" 
+                          type="password" 
+                          placeholder="Enter your password" 
+                          value={password} 
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
+                          required
+                        />
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="register" className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="register-name">Create Username</Label>
+                        <Input 
+                          id="register-name" 
+                          placeholder="Choose a username" 
+                          value={name} 
+                          onChange={(e) => setName(e.target.value)}
+                          className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="register-password">Create Password</Label>
+                        <Input 
+                          id="register-password" 
+                          type="password" 
+                          placeholder="Choose a password" 
+                          value={password} 
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
+                          required
+                        />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
                 <CardFooter className="flex justify-between pt-2">
                   <Button 
@@ -152,7 +206,7 @@ const Index: React.FC = () => {
                     className="w-1/2 ml-2 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] hover:opacity-90 transition-opacity"
                   >
                     <User className="mr-2 h-4 w-4" />
-                    Continue
+                    {authTab === 'login' ? 'Login' : 'Register'}
                   </Button>
                 </CardFooter>
               </form>

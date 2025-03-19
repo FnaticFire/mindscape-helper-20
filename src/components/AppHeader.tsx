@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
 const AppHeader: React.FC = () => {
-  const { user, darkMode, setDarkMode } = useApp();
+  const { user, setUser, darkMode, setDarkMode } = useApp();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -39,6 +39,8 @@ const AppHeader: React.FC = () => {
   const handleLogoClick = () => navigate('/');
   
   const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('mindhaven-user');
     toast({
       title: "Logged out successfully",
       description: "See you again soon!",

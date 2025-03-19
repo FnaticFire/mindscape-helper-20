@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export type Mood = 'great' | 'good' | 'okay' | 'bad' | 'awful' | null;
 
@@ -16,15 +17,15 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
+export interface User {
+  name: string;
+  password: string;
+  streakDays: number;
+}
+
 interface AppContextType {
-  user: {
-    name: string;
-    streakDays: number;
-  } | null;
-  setUser: React.Dispatch<React.SetStateAction<{
-    name: string;
-    streakDays: number;
-  } | null>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   currentMood: Mood;
   setCurrentMood: React.Dispatch<React.SetStateAction<Mood>>;
   moodHistory: MoodEntry[];
@@ -39,13 +40,15 @@ interface AppContextType {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  login: (name: string, password: string) => boolean;
+  register: (name: string, password: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // User state
-  const [user, setUser] = useState<{ name: string; streakDays: number } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   
   // Mood tracking
   const [currentMood, setCurrentMood] = useState<Mood>(null);
@@ -153,6 +156,50 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, 1000);
     }
   };
+
+  // Auth functions
+  const login = (name: string, password: string): boolean => {
+    const users = localStorage.getItem('mindhaven-users');
+    if (users) {
+      const parsedUsers = JSON.parse(users) as User[];
+      const foundUser = parsedUsers.find(u => u.name === name && u.password === password);
+      
+      if (foundUser) {
+        setUser(foundUser);
+        toast.success("Login successful!");
+        return true;
+      }
+    }
+    
+    toast.error("Invalid username or password");
+    return false;
+  };
+  
+  const register = (name: string, password: string): boolean => {
+    const users = localStorage.getItem('mindhaven-users');
+    let parsedUsers: User[] = [];
+    
+    if (users) {
+      parsedUsers = JSON.parse(users) as User[];
+      if (parsedUsers.some(u => u.name === name)) {
+        toast.error("Username already exists");
+        return false;
+      }
+    }
+    
+    const newUser: User = {
+      name,
+      password,
+      streakDays: 1
+    };
+    
+    parsedUsers.push(newUser);
+    localStorage.setItem('mindhaven-users', JSON.stringify(parsedUsers));
+    
+    setUser(newUser);
+    toast.success("Registration successful!");
+    return true;
+  };
   
   // Simple AI response generator based on keywords
   const generateAIResponse = (userMessage: string) => {
@@ -203,7 +250,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     darkMode,
     setDarkMode,
     isLoading,
-    setIsLoading
+    setIsLoading,
+    login,
+    register
   };
   
   return (
