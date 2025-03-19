@@ -1,10 +1,9 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useApp } from '@/contexts/AppContext';
-import { Brain, MessageSquare, BarChart, Wind, User, Heart } from 'lucide-react';
+import { MessageSquare, BarChart, Wind, User, Brain } from 'lucide-react';
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
@@ -21,11 +20,13 @@ const Index: React.FC = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-blue-50">
       <div className="max-w-3xl w-full">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-full text-primary-foreground">
-              <Heart className="w-6 h-6" />
-            </div>
-            <div className="flex items-center ml-2">
+          <div className="flex flex-col items-center justify-center mb-4">
+            <img 
+              src="/lovable-uploads/0d769958-5df9-4f15-a450-2b515c04e2a7.png" 
+              alt="Healthy Mindset Logo" 
+              className="h-24 w-auto mb-4"
+            />
+            <div className="flex items-center">
               <h1 className="text-4xl font-bold text-primary">Mind<span className="text-secondary">Haven</span></h1>
               <Brain className="w-6 h-6 ml-1 text-accent" />
             </div>
