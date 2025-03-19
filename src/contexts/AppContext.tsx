@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -39,6 +40,7 @@ interface AppContextType {
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isChatLoading: boolean;
   login: (name: string, password: string) => boolean;
   register: (name: string, password: string) => boolean;
 }
@@ -55,6 +57,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   // Chat state
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
   
   // Breathing exercise state
   const [breathingExerciseActive, setBreathingExerciseActive] = useState(false);
@@ -148,10 +151,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     
     // If user sends a message, simulate AI response
     if (message.sender === 'user') {
-      setIsLoading(true);
+      setIsChatLoading(true); // Use chat-specific loading state
       setTimeout(() => {
         generateAIResponse(message.text);
-        setIsLoading(false);
+        setIsChatLoading(false);
       }, 1000);
     }
   };
@@ -250,6 +253,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDarkMode,
     isLoading,
     setIsLoading,
+    isChatLoading,
     login,
     register
   };

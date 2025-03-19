@@ -66,16 +66,24 @@ const MoodTracker: React.FC = () => {
       
       // Calculate average mood if there are multiple entries for a day
       let moodValue = null;
+      let moodKey = null;
       if (dayMoods.length > 0) {
         const sum = dayMoods.reduce((acc, entry) => 
           acc + (entry.mood ? moodValues[entry.mood] : 0), 0
         );
         moodValue = sum / dayMoods.length;
+        // Find nearest mood key based on value
+        const roundedValue = Math.round(moodValue);
+        moodKey = Object.keys(moodValues).find(key => 
+          moodValues[key as keyof typeof moodValues] === roundedValue
+        ) as keyof typeof moodEmojis || null;
       }
       
       return {
         date: format(date, 'MMM dd'),
-        value: moodValue
+        value: moodValue,
+        mood: moodKey,
+        emoji: moodKey ? moodEmojis[moodKey as keyof typeof moodEmojis] : null
       };
     });
     
@@ -83,6 +91,64 @@ const MoodTracker: React.FC = () => {
   };
   
   const chartData = getLast7DaysMoods();
+
+  // Custom tooltip component for the chart
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const value = payload[0].value;
+      if (value === null) return null;
+      
+      const roundedValue = Math.round(value);
+      const moodKey = Object.keys(moodValues).find(
+        key => moodValues[key as keyof typeof moodValues] === roundedValue
+      ) as keyof typeof moodEmojis;
+      
+      const emoji = moodEmojis[moodKey];
+      
+      return (
+        <div className="bg-white dark:bg-gray-800 p-2 rounded-md border border-border shadow-lg text-foreground">
+          <p className="font-semibold">{label}</p>
+          <p className="flex items-center gap-2">
+            <span className="text-xl">{emoji}</span>
+            <span>{moodKey.charAt(0).toUpperCase() + moodKey.slice(1)}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom dot component to show emojis instead of dots
+  const CustomDot = (props: any) => {
+    const { cx, cy, payload } = props;
+    
+    if (payload.emoji) {
+      return (
+        <text 
+          x={cx} 
+          y={cy} 
+          dy={-5}
+          fontSize={16} 
+          textAnchor="middle" 
+          fill={props.stroke}
+        >
+          {payload.emoji}
+        </text>
+      );
+    }
+    
+    // Fall back to regular dot if no emoji
+    return (
+      <circle 
+        cx={cx} 
+        cy={cy} 
+        r={6} 
+        stroke={props.stroke} 
+        strokeWidth={2} 
+        fill="#fff" 
+      />
+    );
+  };
   
   return (
     <div className="space-y-6 p-4">
@@ -153,31 +219,13 @@ const MoodTracker: React.FC = () => {
                   stroke="#888888"
                   tick={{ fill: '#888888', fontSize: 12 }}
                 />
-                <Tooltip
-                  formatter={(value) => {
-                    if (value === null) return ['No entry', ''];
-                    const labels = ['Awful', 'Bad', 'Okay', 'Good', 'Great'];
-                    const index = Math.round(Number(value)) - 1;
-                    return [labels[index] || value, 'Mood'];
-                  }}
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    borderRadius: '8px',
-                    border: '1px solid #ccc',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                  }}
-                />
+                <Tooltip content={<CustomTooltip />} />
                 <Line 
                   type="monotone" 
                   dataKey="value" 
                   stroke="url(#colorGradient)" 
                   strokeWidth={3}
-                  dot={{ 
-                    stroke: '#8B5CF6', 
-                    strokeWidth: 2, 
-                    r: 6,
-                    fill: '#fff'
-                  }}
+                  dot={<CustomDot />}
                   activeDot={{ 
                     r: 8,
                     stroke: '#8B5CF6',

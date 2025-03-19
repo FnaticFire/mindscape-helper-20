@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send } from 'lucide-react';
+import { Send, Loader } from 'lucide-react';
 
 const ChatInterface: React.FC = () => {
-  const { chatMessages, addChatMessage } = useApp();
+  const { chatMessages, addChatMessage, isChatLoading } = useApp();
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -50,6 +50,14 @@ const ChatInterface: React.FC = () => {
             </div>
           </div>
         ))}
+        
+        {isChatLoading && (
+          <div className="chat-bubble chat-bubble-ai flex items-center gap-2">
+            <Loader className="h-4 w-4 animate-spin" />
+            <p>Thinking...</p>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
       
@@ -60,8 +68,9 @@ const ChatInterface: React.FC = () => {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message..."
             className="flex-1"
+            disabled={isChatLoading}
           />
-          <Button type="submit" size="icon" disabled={!message.trim()}>
+          <Button type="submit" size="icon" disabled={!message.trim() || isChatLoading}>
             <Send size={18} />
           </Button>
         </div>
