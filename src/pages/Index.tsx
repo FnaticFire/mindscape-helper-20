@@ -22,16 +22,13 @@ const Index: React.FC = () => {
         <div className="text-center mb-12">
           <div className="flex flex-col items-center justify-center mb-4">
             <img 
-              src="/lovable-uploads/0d769958-5df9-4f15-a450-2b515c04e2a7.png" 
-              alt="Healthy Mindset Logo" 
-              className="h-24 w-auto mb-4"
+              src="/lovable-uploads/1f739179-779c-4d4d-b9f1-1de27a432d5e.png" 
+              alt="MindHaven Logo" 
+              className="h-40 w-auto mb-4"
             />
-            <div className="flex items-center">
-              <h1 className="text-4xl font-bold text-primary">Mind<span className="text-secondary">Haven</span></h1>
-              <Brain className="w-6 h-6 ml-1 text-accent" />
-            </div>
+            <p className="text-lg text-muted-foreground font-medium italic">Breathe, Heal, Thrive with MindHaven</p>
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
             Your AI-powered mental health companion for stress, anxiety, and emotional wellbeing
           </p>
         </div>
