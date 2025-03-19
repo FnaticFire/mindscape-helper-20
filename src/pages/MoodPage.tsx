@@ -15,7 +15,7 @@ const MoodPage: React.FC = () => {
           <img 
             src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
             alt="MindHaven Logo" 
-            className="h-8 w-auto cursor-pointer"
+            className="h-8 w-auto cursor-pointer dark:invert"
             onClick={() => navigate('/')}
           />
           <h1 className="text-xl font-bold bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] bg-clip-text text-transparent">Mood Tracker</h1>

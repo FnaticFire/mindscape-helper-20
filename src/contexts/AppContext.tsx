@@ -98,11 +98,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     }
     
-    // Simulate initial loading
+    // Reduced loading time to prevent getting stuck
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   }, []);
   
   // Save data to localStorage when it changes
@@ -214,10 +214,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             <img 
               src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
               alt="MindHaven Logo" 
-              className="h-20 w-auto animate-pulse-slow mb-4"
+              className="h-20 w-auto animate-pulse-slow mb-4 dark:invert"
             />
-            <div className="w-16 h-1 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] rounded-full overflow-hidden relative">
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse" />
+            <div className="w-24 h-1.5 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] rounded-full overflow-hidden relative">
+              <div className="absolute top-0 left-0 h-full w-1/3 bg-white/30 animate-[move_1s_ease-in-out_infinite]"></div>
             </div>
           </div>
         </div>

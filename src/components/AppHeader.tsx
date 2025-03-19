@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 
 const AppHeader: React.FC = () => {
   const { user, darkMode, setDarkMode } = useApp();
@@ -52,7 +53,7 @@ const AppHeader: React.FC = () => {
         <img 
           src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
           alt="MindHaven Logo" 
-          className="h-10 w-auto cursor-pointer transition-transform hover:scale-105"
+          className="h-10 w-auto cursor-pointer transition-transform hover:scale-105 dark:invert"
           onClick={handleLogoClick}
         />
         
@@ -75,10 +76,21 @@ const AppHeader: React.FC = () => {
             id="dark-mode"
             className="mr-2"
           />
-          <label htmlFor="dark-mode" className="text-sm cursor-pointer hidden md:block">
+          <label htmlFor="dark-mode" className="text-sm cursor-pointer">
             {darkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </label>
         </div>
+        
+        {user && (
+          <div className="hidden md:block">
+            <div className="flex items-center gap-2">
+              <div className="w-full max-w-32">
+                <Progress value={user.streakDays * 10} className="h-2 bg-gray-200 dark:bg-gray-700" />
+              </div>
+              <span className="text-xs text-muted-foreground whitespace-nowrap">{user.streakDays} day streak</span>
+            </div>
+          </div>
+        )}
         
         {user ? (
           <DropdownMenu>
@@ -86,7 +98,6 @@ const AppHeader: React.FC = () => {
               <div className="flex items-center gap-2 cursor-pointer">
                 <div className="text-sm text-right hidden md:block">
                   <p className="font-medium">{user.name}</p>
-                  <p className="text-xs text-muted-foreground">{user.streakDays} day streak</p>
                 </div>
                 <div className="w-9 h-9 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] rounded-full flex items-center justify-center text-primary-foreground shadow-md hover:shadow-lg transition-shadow">
                   {user.name.charAt(0).toUpperCase()}

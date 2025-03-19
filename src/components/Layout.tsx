@@ -1,24 +1,11 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import AppHeader from '@/components/AppHeader';
 import Navigation from '@/components/Navigation';
 import { useApp } from '@/contexts/AppContext';
 
 const Layout: React.FC = () => {
-  const location = useLocation();
-  const { setIsLoading } = useApp();
-  
-  // Add page transition effect
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); // Short loading time for transitions
-    
-    return () => clearTimeout(timer);
-  }, [location.pathname, setIsLoading]);
-  
   return (
     <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <AppHeader />
