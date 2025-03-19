@@ -10,12 +10,19 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to landing page if not logged in, redirect to home if logged in and on root
+  // Redirect to landing page if not logged in, and handle saved redirects
   useEffect(() => {
     if (!user) {
       navigate('/');
     } else if (location.pathname === '/' || location.pathname === '') {
-      navigate('/home');
+      // Check if there's a saved redirect in localStorage
+      const savedRedirect = localStorage.getItem('mindhaven-redirect-after-login');
+      if (savedRedirect) {
+        localStorage.removeItem('mindhaven-redirect-after-login');
+        navigate(savedRedirect);
+      } else {
+        navigate('/home');
+      }
     }
   }, [user, navigate, location.pathname]);
 

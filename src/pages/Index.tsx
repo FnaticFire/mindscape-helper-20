@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { MessageSquare, BarChart, Wind, User, Brain, Home, Heart, Moon, Sun, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from 'sonner';
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
@@ -57,27 +59,43 @@ const Index: React.FC = () => {
       document.documentElement.classList.add('dark');
     }
   };
+
+  const handleModuleClick = (path: string) => {
+    // If not logged in, show login first
+    if (!user) {
+      setShowLogin(true);
+      // Store the intended destination for after login
+      localStorage.setItem('mindhaven-redirect-after-login', path);
+      toast('Please log in to access this feature');
+    } else {
+      navigate(path);
+    }
+  };
   
   const features = [
     {
       icon: <MessageSquare className="h-6 w-6 text-[hsl(var(--pink-dark))]" />,
       title: "AI Companion",
-      description: "Chat with our AI trained in CBT and mindfulness techniques to help manage anxiety and stress."
+      description: "Chat with our AI trained in CBT and mindfulness techniques to help manage anxiety and stress.",
+      path: "/chat"
     },
     {
       icon: <BarChart className="h-6 w-6 text-[hsl(var(--pink-dark))]" />,
       title: "Mood Tracker",
-      description: "Log and visualize your emotional patterns to gain insights and improve self-awareness."
+      description: "Log and visualize your emotional patterns to gain insights and improve self-awareness.",
+      path: "/mood"
     },
     {
       icon: <Wind className="h-6 w-6 text-[hsl(var(--pink-dark))]" />,
       title: "Breathing Exercises",
-      description: "Guided breathing techniques to help you manage stress and anxiety in real time."
+      description: "Guided breathing techniques to help you manage stress and anxiety in real time.",
+      path: "/breathe"
     },
     {
       icon: <User className="h-6 w-6 text-[hsl(var(--pink-dark))]" />,
       title: "Personalized Journey",
-      description: "Customize your wellness journey with personalized recommendations and tracking."
+      description: "Customize your wellness journey with personalized recommendations and tracking.",
+      path: "/profile"
     }
   ];
   
@@ -258,7 +276,10 @@ const Index: React.FC = () => {
               </div>
             
               <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-10">
-                <Card className="group border-[hsl(var(--pink-light))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--pink-light))]/30 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative">
+                <Card 
+                  onClick={() => handleModuleClick('/chat')}
+                  className="group border-[hsl(var(--pink-light))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--pink-light))]/30 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative cursor-pointer"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--pink))]/0 to-[hsl(var(--pink))]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <CardHeader>
                     <div className="flex items-center">
@@ -276,7 +297,10 @@ const Index: React.FC = () => {
                   </CardContent>
                   <CardFooter>
                     <Button 
-                      onClick={() => setShowLogin(true)} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleModuleClick('/chat');
+                      }} 
                       className="w-full bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] hover:opacity-90 transition-opacity"
                     >
                       Start Chatting
@@ -284,7 +308,10 @@ const Index: React.FC = () => {
                   </CardFooter>
                 </Card>
                 
-                <Card className="group border-[hsl(var(--cyan-light))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--cyan-light))]/30 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative">
+                <Card 
+                  onClick={() => handleModuleClick('/mood')}
+                  className="group border-[hsl(var(--cyan-light))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--cyan-light))]/30 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative cursor-pointer"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--cyan))]/0 to-[hsl(var(--cyan))]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <CardHeader>
                     <div className="flex items-center">
@@ -302,7 +329,10 @@ const Index: React.FC = () => {
                   </CardContent>
                   <CardFooter>
                     <Button 
-                      onClick={() => setShowLogin(true)} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleModuleClick('/mood');
+                      }} 
                       variant="outline" 
                       className="w-full border-[hsl(var(--cyan))] text-[hsl(var(--cyan-dark))] hover:bg-[hsl(var(--cyan-light))]/50"
                     >
@@ -311,7 +341,10 @@ const Index: React.FC = () => {
                   </CardFooter>
                 </Card>
                 
-                <Card className="group border-[hsl(var(--accent))]/30 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--accent))]/20 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative">
+                <Card 
+                  onClick={() => handleModuleClick('/breathe')}
+                  className="group border-[hsl(var(--accent))]/30 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--accent))]/20 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative cursor-pointer"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--accent))]/0 to-[hsl(var(--accent))]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <CardHeader>
                     <div className="flex items-center">
@@ -329,7 +362,10 @@ const Index: React.FC = () => {
                   </CardContent>
                   <CardFooter>
                     <Button 
-                      onClick={() => setShowLogin(true)} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleModuleClick('/breathe');
+                      }} 
                       variant="outline" 
                       className="w-full border-[hsl(var(--accent))] text-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/10"
                     >
@@ -338,7 +374,10 @@ const Index: React.FC = () => {
                   </CardFooter>
                 </Card>
                 
-                <Card className="group border-[hsl(var(--pink))]/30 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--pink))]/10 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative">
+                <Card 
+                  onClick={() => handleModuleClick('/profile')}
+                  className="group border-[hsl(var(--pink))]/30 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/80 to-[hsl(var(--pink))]/10 dark:from-gray-800/80 dark:to-gray-700/50 backdrop-blur-sm overflow-hidden relative cursor-pointer"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--pink))]/0 to-[hsl(var(--pink))]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <CardHeader>
                     <div className="flex items-center">
@@ -356,7 +395,10 @@ const Index: React.FC = () => {
                   </CardContent>
                   <CardFooter>
                     <Button 
-                      onClick={() => setShowLogin(true)} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleModuleClick('/profile');
+                      }} 
                       variant="outline" 
                       className="w-full border-[hsl(var(--pink))] text-[hsl(var(--pink))] hover:bg-[hsl(var(--pink))]/10"
                     >
