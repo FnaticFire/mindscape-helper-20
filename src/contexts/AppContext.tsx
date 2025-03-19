@@ -35,6 +35,10 @@ interface AppContextType {
   setBreathingExerciseActive: React.Dispatch<React.SetStateAction<boolean>>;
   breathingPhase: 'inhale' | 'hold' | 'exhale' | 'rest';
   setBreathingPhase: React.Dispatch<React.SetStateAction<'inhale' | 'hold' | 'exhale' | 'rest'>>;
+  darkMode: boolean;
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -54,11 +58,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [breathingExerciseActive, setBreathingExerciseActive] = useState(false);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
   
+  // New UI states
+  const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
   // Load data from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('mindhaven-user');
     const storedMoodHistory = localStorage.getItem('mindhaven-mood-history');
     const storedChatMessages = localStorage.getItem('mindhaven-chat-messages');
+    const storedDarkMode = localStorage.getItem('mindhaven-dark-mode');
     
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -80,6 +89,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         timestamp: new Date(message.timestamp)
       })));
     }
+    
+    if (storedDarkMode) {
+      const isDarkMode = JSON.parse(storedDarkMode);
+      setDarkMode(isDarkMode);
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+    
+    // Simulate initial loading
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, []);
   
   // Save data to localStorage when it changes
@@ -101,6 +124,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [chatMessages]);
   
+  useEffect(() => {
+    localStorage.setItem('mindhaven-dark-mode', JSON.stringify(darkMode));
+  }, [darkMode]);
+  
   // Helper function to add a mood entry
   const addMoodEntry = (entry: MoodEntry) => {
     setMoodHistory(prev => [...prev, entry]);
@@ -119,8 +146,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     
     // If user sends a message, simulate AI response
     if (message.sender === 'user') {
+      setIsLoading(true);
       setTimeout(() => {
         generateAIResponse(message.text);
+        setIsLoading(false);
       }, 1000);
     }
   };
@@ -170,12 +199,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     breathingExerciseActive,
     setBreathingExerciseActive,
     breathingPhase,
-    setBreathingPhase
+    setBreathingPhase,
+    darkMode,
+    setDarkMode,
+    isLoading,
+    setIsLoading
   };
   
   return (
     <AppContext.Provider value={value}>
-      {children}
+      {isLoading ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
+          <div className="flex flex-col items-center">
+            <img 
+              src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
+              alt="MindHaven Logo" 
+              className="h-20 w-auto animate-pulse-slow mb-4"
+            />
+            <div className="w-16 h-1 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] rounded-full overflow-hidden relative">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse" />
+            </div>
+          </div>
+        </div>
+      ) : children}
     </AppContext.Provider>
   );
 };
