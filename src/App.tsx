@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import Layout from "@/components/Layout";
 import Index from "./pages/Index";
+import HomePage from "./pages/HomePage";
 import ChatPage from "./pages/ChatPage";
 import MoodPage from "./pages/MoodPage";
 import BreathePage from "./pages/BreathePage";
@@ -25,6 +26,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route element={<Layout />}>
+              <Route path="/home" element={<HomePage />} />
               <Route path="/chat" element={<ChatPage />} />
               <Route path="/mood" element={<MoodPage />} />
               <Route path="/breathe" element={<BreathePage />} />

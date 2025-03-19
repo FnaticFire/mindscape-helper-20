@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -19,10 +18,10 @@ const Index: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState(0);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   
-  // Redirect to chat if user already exists
+  // Redirect to home if user already exists
   useEffect(() => {
     if (user) {
-      navigate('/chat');
+      navigate('/home');
     }
   }, [user, navigate]);
   
@@ -40,11 +39,11 @@ const Index: React.FC = () => {
     if (name.trim() && password) {
       if (authTab === 'login') {
         if (login(name.trim(), password)) {
-          navigate('/chat');
+          navigate('/home');
         }
       } else {
         if (register(name.trim(), password)) {
-          navigate('/chat');
+          navigate('/home');
         }
       }
     }
@@ -113,7 +112,7 @@ const Index: React.FC = () => {
             </div>
             
             {!showLogin && (
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4 animate-fade-in">
+              <p className="text-xl text-foreground max-w-2xl mx-auto mt-4 animate-fade-in font-medium">
                 Your AI-powered mental health companion for stress, anxiety, and emotional wellbeing
               </p>
             )}
@@ -228,7 +227,7 @@ const Index: React.FC = () => {
                         <h2 className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] bg-clip-text text-transparent">
                           {feature.title}
                         </h2>
-                        <p className="text-muted-foreground">
+                        <p className="text-foreground dark:text-gray-200">
                           {feature.description}
                         </p>
                       </div>
@@ -273,7 +272,7 @@ const Index: React.FC = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>Our 24/7 AI companion helps identify negative thought patterns and suggests personalized coping strategies.</p>
+                    <p className="text-foreground dark:text-gray-200">Our 24/7 AI companion helps identify negative thought patterns and suggests personalized coping strategies.</p>
                   </CardContent>
                   <CardFooter>
                     <Button 
@@ -299,7 +298,7 @@ const Index: React.FC = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>Record your daily mood and thoughts to receive personalized insights and recommendations.</p>
+                    <p className="text-foreground dark:text-gray-200">Record your daily mood and thoughts to receive personalized insights and recommendations.</p>
                   </CardContent>
                   <CardFooter>
                     <Button 
@@ -326,7 +325,7 @@ const Index: React.FC = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>Follow our guided breathing exercises to calm your mind and reduce anxiety in moments of stress.</p>
+                    <p className="text-foreground dark:text-gray-200">Follow our guided breathing exercises to calm your mind and reduce anxiety in moments of stress.</p>
                   </CardContent>
                   <CardFooter>
                     <Button 
@@ -353,7 +352,7 @@ const Index: React.FC = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>Set up your profile to track your progress, achievements, and customize your mental wellness journey.</p>
+                    <p className="text-foreground dark:text-gray-200">Set up your profile to track your progress, achievements, and customize your mental wellness journey.</p>
                   </CardContent>
                   <CardFooter>
                     <Button 
@@ -402,7 +401,7 @@ const Index: React.FC = () => {
             </>
           )}
           
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-foreground dark:text-gray-300 font-medium">
             <p>MindHaven is designed to provide support, not to replace professional mental health care.</p>
             <p className="mt-1">If you're experiencing a crisis, please contact emergency services or a mental health professional.</p>
           </div>

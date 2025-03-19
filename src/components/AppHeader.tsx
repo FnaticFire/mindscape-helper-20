@@ -36,7 +36,7 @@ const AppHeader: React.FC = () => {
     }
   };
   
-  const handleLogoClick = () => navigate('/');
+  const handleLogoClick = () => navigate(user ? '/home' : '/');
   
   const handleLogout = () => {
     setUser(null);
@@ -62,7 +62,7 @@ const AppHeader: React.FC = () => {
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => navigate('/')}
+          onClick={() => navigate(user ? '/home' : '/')}
           className="hidden md:flex items-center gap-1 ml-2 text-muted-foreground hover:text-foreground"
         >
           <Home className="h-4 w-4" />
@@ -117,6 +117,10 @@ const AppHeader: React.FC = () => {
                 </div>
               </div>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate('/home')} className="cursor-pointer">
+                <Home className="mr-2 h-4 w-4" />
+                <span>Home</span>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Profile Settings</span>

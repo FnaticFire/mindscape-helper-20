@@ -1,140 +1,121 @@
 
-import React, { useState, useEffect } from 'react';
-import { useApp } from '@/contexts/AppContext';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-import { Calendar, Heart, Award, RefreshCw } from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
+import { useToast } from '@/hooks/use-toast';
+import { Moon, Sun, User as UserIcon, Save } from 'lucide-react';
 
 const UserProfile: React.FC = () => {
-  const { user, setUser, moodHistory } = useApp();
+  const { user, setUser, darkMode, setDarkMode } = useApp();
+  const { toast } = useToast();
   const [name, setName] = useState(user?.name || '');
   
   const handleSaveProfile = () => {
-    if (!name.trim()) {
-      toast.error('Please enter your name');
-      return;
-    }
+    if (!user) return;
     
     setUser({
-      name: name.trim(),
-      streakDays: user?.streakDays || 1
+      name: name,
+      password: user.password, // Add the required password field
+      streakDays: user.streakDays
     });
     
-    toast.success('Profile saved!');
-  };
-  
-  // Calculate stats
-  const totalEntries = moodHistory.length;
-  const lastWeekEntries = moodHistory.filter(
-    entry => entry.date > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-  ).length;
-  
-  // Get common mood
-  const getMostCommonMood = () => {
-    if (moodHistory.length === 0) return null;
-    
-    const moodCounts: Record<string, number> = {};
-    moodHistory.forEach(entry => {
-      if (entry.mood) {
-        moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
-      }
+    toast({
+      title: "Profile Updated",
+      description: "Your profile has been successfully updated.",
+      duration: 3000
     });
-    
-    return Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0][0];
   };
   
-  const commonMood = getMostCommonMood();
-  const moodEmojis: Record<string, string> = {
-    'great': '😄',
-    'good': '🙂',
-    'okay': '😐',
-    'bad': '😔',
-    'awful': '😭'
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (darkMode) {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+    
+    toast({
+      title: darkMode ? "Light Mode Activated" : "Dark Mode Activated",
+      description: "Your preference has been saved",
+      duration: 2000
+    });
   };
+  
+  if (!user) return null;
   
   return (
-    <div className="space-y-6 p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Profile</CardTitle>
-          <CardDescription>Update your personal information</CardDescription>
+    <div className="container max-w-lg mx-auto py-8 px-4">
+      <Card className="shadow-lg border-0 bg-white/40 dark:bg-gray-800/40 backdrop-blur-md">
+        <CardHeader className="pb-4">
+          <div className="w-20 h-20 bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] rounded-full flex items-center justify-center text-primary-foreground shadow-md text-3xl font-bold mx-auto mb-4">
+            {user.name.charAt(0).toUpperCase()}
+          </div>
+          <CardTitle className="text-2xl text-center bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] bg-clip-text text-transparent">User Profile</CardTitle>
+          <CardDescription className="text-center">Manage your account settings</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="name" className="text-sm font-medium">Name</label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                className="mt-1"
-              />
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Username</Label>
+            <Input 
+              id="name"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="border-[hsl(var(--pink-light))] focus-visible:ring-[hsl(var(--pink))]"
+            />
+          </div>
+          
+          <div className="pt-2">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="dark-mode">Dark Mode</Label>
+                <p className="text-sm text-muted-foreground">
+                  Toggle between light and dark theme
+                </p>
+              </div>
+              <div className="flex items-center">
+                <Sun className="w-4 h-4 mr-2 text-muted-foreground" />
+                <Switch
+                  checked={darkMode}
+                  onCheckedChange={toggleDarkMode}
+                  id="dark-mode"
+                />
+                <Moon className="w-4 h-4 ml-2 text-muted-foreground" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Account Statistics</Label>
+              </div>
+            </div>
+            <div className="mt-2 space-y-2">
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">Streak</span>
+                <span className="font-medium">{user.streakDays} days</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">Account Created</span>
+                <span className="font-medium">Today</span>
+              </div>
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={handleSaveProfile} className="w-full">Save Profile</Button>
+          <Button 
+            onClick={handleSaveProfile} 
+            className="w-full bg-gradient-to-r from-[hsl(var(--pink))] to-[hsl(var(--cyan))] hover:opacity-90 transition-opacity"
+          >
+            <Save className="mr-2 h-4 w-4" />
+            Save Changes
+          </Button>
         </CardFooter>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Your MindHaven Stats</CardTitle>
-          <CardDescription>Track your mental wellness journey</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-muted rounded-lg p-4 flex flex-col items-center">
-              <Calendar className="h-8 w-8 text-primary mb-2" />
-              <h3 className="text-2xl font-bold">{totalEntries}</h3>
-              <p className="text-sm text-muted-foreground text-center">Total Mood Entries</p>
-            </div>
-            
-            <div className="bg-muted rounded-lg p-4 flex flex-col items-center">
-              <RefreshCw className="h-8 w-8 text-secondary mb-2" />
-              <h3 className="text-2xl font-bold">{lastWeekEntries}</h3>
-              <p className="text-sm text-muted-foreground text-center">Entries Last Week</p>
-            </div>
-            
-            {user && (
-              <div className="bg-muted rounded-lg p-4 flex flex-col items-center">
-                <Award className="h-8 w-8 text-accent mb-2" />
-                <h3 className="text-2xl font-bold">{user.streakDays}</h3>
-                <p className="text-sm text-muted-foreground text-center">Day Streak</p>
-              </div>
-            )}
-            
-            {commonMood && (
-              <div className="bg-muted rounded-lg p-4 flex flex-col items-center">
-                <Heart className="h-8 w-8 text-primary mb-2" />
-                <h3 className="text-2xl font-bold">{moodEmojis[commonMood]}</h3>
-                <p className="text-sm text-muted-foreground text-center">Most Common Mood</p>
-              </div>
-            )}
-          </div>
-          
-          <div className="mt-6">
-            <h3 className="font-medium mb-2">Achievements</h3>
-            <div className="flex flex-wrap gap-2">
-              {totalEntries > 0 && (
-                <Badge variant="outline" className="bg-primary/10">First Entry</Badge>
-              )}
-              {totalEntries >= 7 && (
-                <Badge variant="outline" className="bg-secondary/10">Week Tracker</Badge>
-              )}
-              {user?.streakDays >= 3 && (
-                <Badge variant="outline" className="bg-accent/10">3 Day Streak</Badge>
-              )}
-              {lastWeekEntries >= 5 && (
-                <Badge variant="outline" className="bg-primary/10">Consistent Check-ins</Badge>
-              )}
-            </div>
-          </div>
-        </CardContent>
       </Card>
     </div>
   );

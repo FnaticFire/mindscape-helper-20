@@ -10,12 +10,14 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to home if not logged in
+  // Redirect to landing page if not logged in, redirect to home if logged in and on root
   useEffect(() => {
     if (!user) {
       navigate('/');
+    } else if (location.pathname === '/' || location.pathname === '') {
+      navigate('/home');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">

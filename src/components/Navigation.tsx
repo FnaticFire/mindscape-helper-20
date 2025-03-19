@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { MessageSquare, BarChart, Wind, User, HelpCircle } from 'lucide-react';
+import { MessageSquare, BarChart, Wind, User, HelpCircle, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useApp } from '@/contexts/AppContext';
 import { useToast } from '@/hooks/use-toast';
@@ -46,6 +46,7 @@ const Navigation: React.FC = () => {
   
   return (
     <nav className="flex md:flex-col justify-around md:justify-start items-center md:items-stretch p-2 md:p-4 glass-card md:bg-transparent border-t md:border-t-0 md:border-r fixed bottom-0 md:top-16 left-0 right-0 md:right-auto md:bottom-0 md:w-20 z-30 animate-fade-in">
+      <NavItem to="/home" icon={<Home size={20} className="transition-transform group-hover:scale-110" />} label="Home" />
       <NavItem to="/chat" icon={<MessageSquare size={20} className="transition-transform group-hover:scale-110" />} label="Chat" />
       <NavItem to="/mood" icon={<BarChart size={20} className="transition-transform group-hover:scale-110" />} label="Mood" />
       <NavItem to="/breathe" icon={<Wind size={20} className="transition-transform group-hover:scale-110" />} label="Breathe" />

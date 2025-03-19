@@ -99,9 +99,16 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  .dark .text-muted-foreground {
+    @apply text-gray-300/80;
+  }
+  
+  .dark img:not([class*="invert"]) {
+    filter: brightness(1.2);
+  }
 }
 
-/* Progress animation for loading */
 @keyframes move {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(400%); }
@@ -222,5 +229,5 @@
 }
 
 .glass-card {
-  @apply backdrop-blur-sm bg-white/70 border border-white/20 shadow-lg;
+  @apply backdrop-blur-sm bg-white/70 dark:bg-gray-800/70 border border-white/20 dark:border-white/10 shadow-lg;
 }
