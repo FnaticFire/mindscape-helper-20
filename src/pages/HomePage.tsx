@@ -68,7 +68,8 @@ const HomePage: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {modules.map((module, index) => (
-          <Card key={index} className={`group border-[hsl(var(--border))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br dark:from-gray-800/80 dark:to-gray-700/50 ${module.bgCard} backdrop-blur-sm overflow-hidden relative`}>
+          <Card key={index} className={`group border-[hsl(var(--border))] shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-br dark:from-gray-800/80 dark:to-gray-700/50 ${module.bgCard} backdrop-blur-sm overflow-hidden relative cursor-pointer`} 
+                onClick={() => navigate(module.path)}>
             <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[hsl(var(--background))]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <CardHeader>
               <div className="flex items-center">

@@ -23,7 +23,7 @@ const Layout: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <AppHeader />
       <div className="flex flex-1 pt-16 pb-16 md:pb-0 md:pl-20">
-        <main className="flex-1 overflow-hidden max-w-5xl mx-auto w-full animate-fade-in">
+        <main className="flex-1 overflow-auto max-w-5xl mx-auto w-full animate-fade-in">
           <Outlet />
         </main>
       </div>
