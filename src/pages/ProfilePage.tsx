@@ -7,7 +7,7 @@ const ProfilePage: React.FC = () => {
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-2 p-4 border-b">
         <img 
-          src="/lovable-uploads/1f739179-779c-4d4d-b9f1-1de27a432d5e.png" 
+          src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
           alt="MindHaven Logo" 
           className="h-8 w-auto"
         />

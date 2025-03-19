@@ -12,14 +12,10 @@ const AppHeader: React.FC = () => {
     <header className="w-full py-4 px-6 flex items-center justify-between bg-background border-b">
       <div className="flex items-center gap-2">
         <img 
-          src="/lovable-uploads/1f739179-779c-4d4d-b9f1-1de27a432d5e.png" 
+          src="/lovable-uploads/ccac2e90-d337-46f0-a75a-31c3d8d246af.png" 
           alt="MindHaven Logo" 
           className="h-10 w-auto"
         />
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold">MindHaven</h1>
-          <p className="text-xs text-muted-foreground italic">Breathe, Heal, Thrive</p>
-        </div>
       </div>
       
       <div className="flex items-center gap-4">
